@@ -1,0 +1,180 @@
+CREATE  table employee  (
+    employee_id number(5) primary key ,
+    salary number(6 ,  2)  check ( salary >= 0) ,
+    birth_date DATE       ,
+    employee_email  varchar2 (25) unique ,
+    sex varchar2 (1)  , 
+    super_id number (5) ,
+    hire_date DATE , 
+    emp_first_name varchar2(25)  ,
+    emp_last_name varchar2(25)   ,
+    dep_id number(5) 
+    
+   );
+ 
+       CREATE table Department (
+       dep_id number (5) primary key ,
+       dep_name varchar2(25)  ,
+       manger_start_date DATE   ,
+       employee_id number(5) UNIQUE
+       
+    ) ;
+      
+      
+      CREATE table Sponser (
+       spon_name varchar2 (25)  ,
+       inward number(5) , 
+       outward number (5) ,
+    
+  CONSTRAINT spon_name_pk PRIMARY KEY(spon_name) );
+      
+   
+  
+   
+       CREATE  table Users (
+       user_name varchar2 (25) primary key,
+       user_email varchar2(25)  UNIQUE , 
+       passoword varchar2(15) UNIQUE     ,
+       user_first_name varchar2(15) ,
+       user_last_name varchar2(10) 
+       );
+       
+       
+      
+       CREATE table Photos  (
+       photo_serial number(25) , 
+       photo_date DATE  NOT NULL,
+       photo_name varchar2 (25)  ,
+       employee_id number(5) NOT NULL ,
+       
+       CONSTRAINT photo_serial_pk PRIMARY KEY(photo_serial)
+       
+       );
+       
+
+
+
+
+       CREATE table Article (
+       title varchar2 (25)  ,
+       A_date DATE   ,
+       photo_serial number (25) , 
+       
+       primary key (title ,A_date )
+      
+       );
+       
+       CREATE table Categories (
+        category_name varchar2(25)  ,
+        dep_id number(5) , 
+       
+       primary key (dep_id ,category_name)
+       
+       );
+     
+       
+     CREATE table Writing (
+        employee_id number (5) ,
+        title varchar2 (25)  ,
+        writing_date DATE ,
+        primary key (employee_id , title , writing_date )
+       
+       );
+       
+       
+       CREATE table Ads (
+        spon_name varchar2 (25)  ,
+        category_name varchar2 (25) , 
+        dep_id number(5),
+        
+        primary key ( dep_id , category_name ,spon_name )
+        
+        );
+       
+       CREATE table Viewing (
+        user_name VARCHAR2 (25)  ,
+        category_name varchar2 (25) , 
+        dep_id number(5) ,
+        primary key (user_name , category_name , dep_id)
+        );
+      
+       CREATE table Include (
+       photo_serial number(25) ,
+       title varchar2 (25),    
+       include_A_date DATE  ,
+       category_name varchar2 (25) , 
+       dep_id number(5),     
+       primary key (photo_serial ,title ,include_A_date ,category_name , dep_id )
+       );
+
+              
+       ALTER TABLE employee
+       ADD FOREIGN KEY(dep_id)   
+       REFERENCES Department(dep_id )
+       ON DELETE CASCADE;
+
+
+ALTER TABLE Department 
+ADD FOREIGN KEY(employee_id)
+REFERENCES employee(employee_id)
+ON DELETE CASCADE;
+
+ALTER TABLE Photos
+ADD FOREIGN KEY(employee_id)
+REFERENCES employee(employee_id)
+ON DELETE CASCADE;
+
+ALTER TABLE Article
+ADD FOREIGN KEY(photo_serial)
+REFERENCES Photos(photo_serial)
+ON DELETE SET NULL;
+
+ALTER TABLE Categories 
+ADD FOREIGN KEY(dep_id)
+REFERENCES Department(dep_id)
+ON DELETE CASCADE;
+
+ALTER TABLE Writing 
+ADD FOREIGN KEY(employee_id)
+REFERENCES employee(employee_id)
+ON DELETE CASCADE;
+
+ALTER TABLE Writing 
+ADD FOREIGN KEY(title,writing_date)
+REFERENCES Article(title,a_date)
+ON DELETE CASCADE;
+
+ALTER TABLE Ads
+ADD FOREIGN KEY(spon_name)
+REFERENCES Sponser(spon_name)
+ON DELETE CASCADE;
+
+ALTER TABLE Ads
+ADD FOREIGN KEY(category_name,dep_id)
+REFERENCES Categories(category_name,dep_id)
+ON DELETE CASCADE;
+
+ALTER TABLE Viewing
+ADD FOREIGN KEY(user_name)
+REFERENCES Users(user_name)
+ON DELETE CASCADE;
+
+ALTER TABLE Viewing
+ADD FOREIGN KEY(category_name,dep_id)
+REFERENCES Categories(category_name,dep_id)
+ON DELETE CASCADE;
+
+ALTER TABLE Include
+ADD FOREIGN KEY(photo_serial)
+REFERENCES Photos(photo_serial)
+ON DELETE CASCADE;
+
+ALTER TABLE Include
+ADD FOREIGN KEY(title,a_date)
+REFERENCES Article(title,a_date)
+ON DELETE CASCADE;
+
+ALTER TABLE Include
+ADD FOREIGN KEY(category_name,dep_id)
+REFERENCES Categories(category_name,dep_id)
+ON DELETE CASCADE;
